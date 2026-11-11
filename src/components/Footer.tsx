@@ -7,9 +7,9 @@ const GithubIcon = () => (
   </svg>
 );
 
-const TelegramIcon = () => (
+const GmailIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.967l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.978.592z" />
+    <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
   </svg>
 );
 
@@ -21,7 +21,7 @@ const LinkedInIcon = () => (
 
 const iconMap = {
   github: GithubIcon,
-  telegram: TelegramIcon,
+  gmail: GmailIcon,
   linkedin: LinkedInIcon,
 };
 
@@ -47,12 +47,13 @@ const Footer: React.FC = () => {
           <div className="flex items-center gap-4">
             {socials.map(({ label, href, icon }) => {
               const Icon = iconMap[icon];
+              const isMail = href.startsWith('mailto:');
               return (
                 <a
                   key={label}
                   href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isMail ? undefined : '_blank'}
+                  rel={isMail ? undefined : 'noopener noreferrer'}
                   aria-label={label}
                   className="w-10 h-10 flex items-center justify-center rounded-lg border border-border text-textMuted hover:text-primary hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
                 >

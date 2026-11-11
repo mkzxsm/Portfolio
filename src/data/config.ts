@@ -49,7 +49,7 @@ export interface ContactItem {
     label: string;
     value: string;
     href: string;
-    icon: "mail" | "telegram" | "github" | "linkedin";
+    icon: "gmail" | "github" | "linkedin";
     description: string;
 }
 
@@ -168,10 +168,10 @@ export const footerMeta: FooterMeta = {
 
 export const contactItems: ContactItem[] = [
     {
-        label: "Telegram",
-        value: "@mkzxsm",
-        href: "https://t.me/mkzxsm",
-        icon: "telegram",
+        label: "Gmail",
+        value: "maxym.martyn@gmail.com",
+        href: "mailto:maxym.martyn@gmail.com",
+        icon: "gmail",
         description: "Fastest way to reach me",
     },
     {
