@@ -1,37 +1,45 @@
-import React from 'react';
-import { projects } from '../data/portfolio';
-import ProjectCard from './ProjectCard';
+import React, { useEffect, useState } from "react";
+import type { Project } from "../data/portfolio";
+import ProjectCard from "./ProjectCard";
 
 const ProjectsSection: React.FC = () => {
-  return (
-    <section id="projects" className="py-20 md:py-28 px-6 max-w-5xl mx-auto scroll-mt-16 md:scroll-mt-20">
-      <div className="section-label">projects.ts</div>
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [loading, setLoading] = useState(true);
 
-      <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-textMain">
-          Things I've <span className="text-primary">built</span>
-        </h2>
-        <a
-          href="https://github.com/mkzxsm"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-mono text-sm text-textMuted hover:text-primary transition-colors duration-300 flex items-center gap-2"
-        >
-          <span>view all on github</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
-        </a>
-      </div>
+    useEffect(() => {
+        fetch("/api/projects")
+            .then(res => res.json())
+            .then(data => {
+                setProjects(data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Помилка отримання даних:", error);
+                setLoading(false);
+            });
+    }, []);
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {projects.map((project, i) => (
-          <ProjectCard key={project.id} project={project} index={i} />
-        ))}
-      </div>
-    </section>
-  );
+    return (
+        <section id="projects" className="py-20 px-4 max-w-5xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-textMain mb-10 text-center">My Projects</h2>
+
+            {loading ? (
+                <div className="flex justify-center items-center h-40">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                </div>
+            ) : projects.length === 0 ? (
+                <div className="text-center text-textMuted">
+                    <p>Проєкти ще не додані в Notion або API недоступне.</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {projects.map((project, index) => (
+                        <ProjectCard key={project.id} project={project} index={index} />
+                    ))}
+                </div>
+            )}
+        </section>
+    );
 };
 
 export default ProjectsSection;
