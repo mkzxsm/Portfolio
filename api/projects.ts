@@ -30,6 +30,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
                 description: page.properties.Description?.rich_text[0]?.plain_text || "",
                 techStack: page.properties.TechStack?.multi_select.map((tag: any) => tag.name) || [],
                 liveUrl: page.properties.LiveUrl?.url || undefined,
+                githubUrl: page.properties.githubUrl?.url || undefined,
             };
         });
 
