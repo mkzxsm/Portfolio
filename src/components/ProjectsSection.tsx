@@ -10,11 +10,17 @@ const ProjectsSection: React.FC = () => {
         fetch("/api/projects")
             .then(res => res.json())
             .then(data => {
-                setProjects(data);
+                if (Array.isArray(data)) {
+                    setProjects(data);
+                } else {
+                    console.error("Помилка від API або Notion:", data);
+                    setProjects([]);
+                }
                 setLoading(false);
             })
             .catch(error => {
-                console.error("Помилка отримання даних:", error);
+                console.error("Помилка мережі:", error);
+                setProjects([]);
                 setLoading(false);
             });
     }, []);
