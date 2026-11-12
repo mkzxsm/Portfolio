@@ -1,17 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment */
-import { Client } from "@notionhq/client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-
-const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
     try {
-        // @ts-ignore
-        const response = await notion.databases.query({
-            database_id: process.env.NOTION_DATABASE_ID as string,
+        const NOTION_API_KEY = process.env.NOTION_API_KEY;
+        const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
+
+        const notionResponse = await fetch(`https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${NOTION_API_KEY}`,
+                "Notion-Version": "2022-06-28",
+                "Content-Type": "application/json",
+            },
         });
 
-        const projects = response.results.map((page: any) => {
+        if (!notionResponse.ok) {
+            const errorData = await notionResponse.text();
+            console.error("Помилка від Notion API:", errorData);
+            return res.status(500).json({ error: "Помилка доступу до Notion API" });
+        }
+
+        const data: any = await notionResponse.json();
+
+        const projects = data.results.map((page: any) => {
             return {
                 id: page.id,
                 title: page.properties.Name?.title[0]?.plain_text || "Без назви",
@@ -23,7 +35,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
 
         res.status(200).json(projects);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Помилка отримання даних з Notion" });
+        console.error("Помилка бекенду:", error);
+        res.status(500).json({ error: "Помилка сервера" });
     }
 }
