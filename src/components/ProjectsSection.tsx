@@ -26,7 +26,7 @@ const ProjectsSection: React.FC = () => {
     }, []);
 
     return (
-        <section id="projects" className="py-20 px-4 max-w-5xl mx-auto">
+        <section id="projects" className="py-20 md:py-28 px-6 max-w-5xl mx-auto scroll-mt-16 md:scroll-mt-20">
             <h2 className="text-3xl md:text-4xl font-bold text-textMain mb-10 text-center">My Projects</h2>
 
             {loading ? (
